@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth.json');
 
+// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -14,5 +15,4 @@ module.exports = (req, res, next) => {
     req.userId = decoded.id;
     return next();
   });
-  return res.status(200).send({ ok: true });
 };
