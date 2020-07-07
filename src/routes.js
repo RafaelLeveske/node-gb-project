@@ -13,7 +13,7 @@ const upload = multer(uploadConfig);
 
 routes.post('/users', upload.single('avatar'), UserController.store);
 
-routes.post('/sessions', SessionController.store);
+routes.post('/sessions', authMiddleware, SessionController.store);
 
 routes.get('/professors', authMiddleware, ProfessorsController.index);
 
