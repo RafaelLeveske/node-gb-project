@@ -6,6 +6,10 @@ module.exports = {
         primarKey: true,
         allowNull: false,
       },
+      avatar: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
