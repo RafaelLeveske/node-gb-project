@@ -28,6 +28,7 @@ module.exports = {
 
     const user = await User.create({
       id: uuid(),
+      avatar: req.file.filename,
       name,
       email,
       password: hashedPassword,
