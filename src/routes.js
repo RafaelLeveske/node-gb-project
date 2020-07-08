@@ -3,7 +3,7 @@ const multer = require('multer');
 const uploadConfig = require('./config/upload');
 
 const UserController = require('./controllers/UserController');
-const SessionController = require('./controllers/SessionController');
+const UserSessionController = require('./controllers/UserSessionController');
 const ProfessorController = require('./controllers/ProfessorController');
 const StudentController = require('./controllers/StudentController');
 const authMiddleware = require('./middlewares/auth');
@@ -16,7 +16,7 @@ routes.get('/users', authMiddleware, UserController.index);
 
 routes.post('/users', upload.single('avatar'), UserController.store);
 
-routes.post('/sessions', SessionController.store);
+routes.post('/users/sessions', UserSessionController.store);
 
 routes.get(
   '/users/:userId/professors',
