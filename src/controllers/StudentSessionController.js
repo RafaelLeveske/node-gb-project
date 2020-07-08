@@ -1,6 +1,6 @@
 const { compare } = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth.json');
+const authConfig = require('../config/auth');
 const Student = require('../models/Student');
 
 module.exports = {
