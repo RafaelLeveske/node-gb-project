@@ -2,7 +2,7 @@ const { uuid } = require('uuidv4');
 const { hash } = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const authConfig = require('../config/auth.json');
+const authConfig = require('../config/auth');
 
 module.exports = {
   async index(req, res) {
