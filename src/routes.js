@@ -11,10 +11,22 @@ const routes = express.Router();
 
 const upload = multer(uploadConfig);
 
+routes.get('/users', authMiddleware, UserController.index);
+
 routes.post('/users', upload.single('avatar'), UserController.store);
 
-routes.post('/sessions', authMiddleware, SessionController.store);
+routes.post('/sessions', SessionController.store);
 
-routes.get('/professors', authMiddleware, ProfessorsController.index);
+routes.get(
+  '/users/:userId/professors',
+  authMiddleware,
+  ProfessorsController.index,
+);
+routes.post(
+  '/users/:userId/professors',
+  authMiddleware,
+  upload.single('avatar'),
+  ProfessorsController.store,
+);
 
 module.exports = routes;
