@@ -5,6 +5,7 @@ module.exports = {
         type: Sequelize.UUID,
         primarKey: true,
         allowNull: false,
+        unique: true,
       },
       avatar: {
         type: Sequelize.STRING,
