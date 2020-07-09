@@ -8,13 +8,9 @@ const authConfig = require('../config/auth');
 
 module.exports = {
   async index(req, res) {
-    const { professorId } = req.params;
+    const trainings = await Training.findAll();
 
-    const professor = await Professor.findByPk(professorId, {
-      include: { association: 'trainings' },
-    });
-
-    return res.json(professor);
+    return res.json(trainings);
   },
 
   async store(req, res) {
@@ -28,6 +24,13 @@ module.exports = {
     const { date, time, url } = req.body;
 
     const parsedDate = parseISO(date);
+
+    const checkTrainingExists = await Training.findOne({
+      where: { date, time },
+    });
+    if (checkTrainingExists) {
+      return res.json({ error: 'Training is already booked' }, 401);
+    }
 
     const professor = await Professor.findByPk(professorId);
 

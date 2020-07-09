@@ -41,11 +41,7 @@ routes.get('/students', authMiddleware, StudentController.index);
 
 routes.post('/students', upload.single('avatar'), StudentController.store);
 
-routes.get(
-  '/professors/:professorId/trainings',
-  authMiddleware,
-  TrainingController.index,
-);
+routes.get('/trainings', authMiddleware, TrainingController.index);
 routes.post(
   '/professors/:professorId/trainings',
   authMiddleware,
