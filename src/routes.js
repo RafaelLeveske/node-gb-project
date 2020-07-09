@@ -9,6 +9,7 @@ const StudentSessionController = require('./controllers/StudentSessionController
 const ProfessorController = require('./controllers/ProfessorController');
 const StudentController = require('./controllers/StudentController');
 const TrainingController = require('./controllers/TrainingController');
+const TrainingPresenceController = require('./controllers/TrainingPresenceController');
 const authMiddleware = require('./middlewares/auth');
 
 const routes = express.Router();
@@ -46,6 +47,12 @@ routes.post(
   '/professors/:professorId/trainings',
   authMiddleware,
   TrainingController.store,
+);
+
+routes.post(
+  '/trainings/:trainingId/presence',
+  authMiddleware,
+  TrainingPresenceController.store,
 );
 
 module.exports = routes;
