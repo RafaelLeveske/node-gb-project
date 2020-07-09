@@ -26,14 +26,19 @@ module.exports = {
 
     const hashedPassword = await hash(password, 8);
 
-    const student = await Student.create({
+    const student = {
       id: uuid(),
       avatar: req.file.filename,
       name,
       email,
       password: hashedPassword,
       graduation,
-    });
+    };
+
+    await Student.create(student);
+
+    delete student.password;
+
     return res.send({
       student,
       token: genetateToken({ id: student.id }),

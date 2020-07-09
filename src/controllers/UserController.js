@@ -8,6 +8,8 @@ module.exports = {
   async index(req, res) {
     const users = await User.findAll();
 
+    delete users.password;
+
     return res.json(users);
   },
 
@@ -26,13 +28,18 @@ module.exports = {
 
     const hashedPassword = await hash(password, 8);
 
-    const user = await User.create({
+    const user = {
       id: uuid(),
       avatar: req.file.filename,
       name,
       email,
       password: hashedPassword,
-    });
+    };
+
+    await User.create(user);
+
+    delete user.password;
+
     return res.send({
       user,
       token: genetateToken({ id: user.id }),
