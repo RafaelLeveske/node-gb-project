@@ -8,6 +8,7 @@ const ProfessorSessionController = require('./controllers/ProfessorSessionContro
 const StudentSessionController = require('./controllers/StudentSessionController');
 const ProfessorController = require('./controllers/ProfessorController');
 const StudentController = require('./controllers/StudentController');
+const TrainingController = require('./controllers/TrainingController');
 const authMiddleware = require('./middlewares/auth');
 
 const routes = express.Router();
@@ -39,5 +40,16 @@ routes.post(
 routes.get('/students', authMiddleware, StudentController.index);
 
 routes.post('/students', upload.single('avatar'), StudentController.store);
+
+routes.get(
+  '/professors/:professorId/trainings',
+  authMiddleware,
+  TrainingController.index,
+);
+routes.post(
+  '/professors/:professorId/trainings',
+  authMiddleware,
+  TrainingController.store,
+);
 
 module.exports = routes;

@@ -1,33 +1,33 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('Trainings', {
       id: {
         type: Sequelize.UUID,
         primarKey: true,
         allowNull: false,
         unique: true,
       },
-      avatar: {
+      professorId: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'Professors',
+          key: 'id',
+        },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      },
+      date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
+      time: {
+        type: Sequelize.TIME,
+        allowNull: false,
+      },
+      url: {
         type: Sequelize.STRING,
         allowNull: true,
-      },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-          notEmpty: true,
-          isEmail: true,
-          is: /regex_validation/,
-        },
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -43,6 +43,6 @@ module.exports = {
   },
 
   down: async queryInterface => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('Trainings');
   },
 };

@@ -17,7 +17,7 @@ module.exports = {
         expiresIn: '1d',
       });
     }
-    const { name, email, password, graduation } = req.body;
+    const { name, email, password } = req.body;
 
     const checkUserExists = await User.findOne({ where: { email } });
     if (checkUserExists) {
@@ -32,7 +32,6 @@ module.exports = {
       name,
       email,
       password: hashedPassword,
-      graduation,
     });
     return res.send({
       user,
