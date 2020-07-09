@@ -4,9 +4,12 @@ class Training extends Model {
   static init(connection) {
     super.init(
       {
+        description: DataTypes.STRING,
+        type: DataTypes.STRING,
         date: DataTypes.DATEONLY,
         time: DataTypes.TIME,
         url: DataTypes.STRING,
+        presence: DataTypes.INTEGER,
       },
       {
         sequelize: connection,

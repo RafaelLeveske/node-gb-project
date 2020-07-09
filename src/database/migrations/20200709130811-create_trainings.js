@@ -17,6 +17,14 @@ module.exports = {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
       },
+      description: {
+        type: Sequelize.STRING(1234),
+        allowNull: false,
+      },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       date: {
         type: Sequelize.DATEONLY,
         allowNull: false,
@@ -28,6 +36,11 @@ module.exports = {
       url: {
         type: Sequelize.STRING(1234),
         allowNull: true,
+      },
+      presence: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        autoIncrement: true,
       },
       createdAt: {
         type: Sequelize.DATE,

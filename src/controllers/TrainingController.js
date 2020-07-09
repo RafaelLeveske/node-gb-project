@@ -21,7 +21,7 @@ module.exports = {
     }
     const { professorId } = req.params;
 
-    const { date, time, url } = req.body;
+    const { description, type, date, time, url } = req.body;
 
     const parsedDate = parseISO(date);
 
@@ -41,9 +41,12 @@ module.exports = {
     const training = await Training.create({
       id: uuid(),
       professorId,
+      description,
+      type,
       date: parsedDate,
       time,
       url,
+      presence: 0,
     });
 
     return res.send({
