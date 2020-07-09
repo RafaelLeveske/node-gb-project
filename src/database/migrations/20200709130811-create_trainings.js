@@ -26,7 +26,7 @@ module.exports = {
         allowNull: false,
       },
       url: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1234),
         allowNull: true,
       },
       createdAt: {
