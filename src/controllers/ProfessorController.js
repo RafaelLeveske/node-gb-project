@@ -26,6 +26,11 @@ module.exports = {
 
     const { name, email, password, graduation } = req.body;
 
+    const checkUserExists = await Professor.findOne({ where: { email } });
+    if (checkUserExists) {
+      return res.json({ error: 'E-mail address already used' }, 401);
+    }
+
     const user = await User.findByPk(userId);
 
     if (!user) {
@@ -34,7 +39,7 @@ module.exports = {
 
     const hashedPassword = await hash(password, 8);
 
-    const professor = await Professor.create({
+    const professor = {
       id: uuid(),
       userId,
       avatar: req.file.filename,
@@ -42,7 +47,11 @@ module.exports = {
       email,
       password: hashedPassword,
       graduation,
-    });
+    };
+
+    await Professor.create(professor);
+
+    delete professor.password;
 
     return res.send({
       professor,
