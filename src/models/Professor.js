@@ -17,7 +17,15 @@ class Professor extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: 'userId', as: 'users' });
+    this.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'users',
+    });
+
+    this.hasMany(models.Training, {
+      foreignKey: 'professorId',
+      as: 'trainings',
+    });
   }
 }
 

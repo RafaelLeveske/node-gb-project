@@ -5,6 +5,7 @@ module.exports = {
         type: Sequelize.UUID,
         primarKey: true,
         allowNull: false,
+        unique: true,
       },
       userId: {
         type: Sequelize.DataTypes.UUID,
@@ -13,6 +14,8 @@ module.exports = {
           model: 'Users',
           key: 'id',
         },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
       avatar: {
         type: Sequelize.STRING,
