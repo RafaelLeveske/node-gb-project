@@ -15,5 +15,13 @@ class Student extends Model {
       },
     );
   }
+
+  static associate(models) {
+    this.belongsToMany(models.Training, {
+      foreignKey: 'studentId',
+      through: 'StudentsTraining',
+      as: 'trainings',
+    });
+  }
 }
 module.exports = Student;

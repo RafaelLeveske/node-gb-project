@@ -1,5 +1,4 @@
 const { parseISO } = require('date-fns');
-// const moment = require('moment');
 const { uuid } = require('uuidv4');
 const jwt = require('jsonwebtoken');
 const Training = require('../models/Training');
@@ -13,6 +12,22 @@ module.exports = {
     return res.json(trainings);
   },
 
+  async show(req, res) {
+    const { trainingId } = req.params;
+
+    const training = await Training.findByPk(trainingId, {
+      include: {
+        association: 'students',
+        attributes: ['id', 'avatar', 'name'],
+        through: {
+          attributes: [],
+        },
+      },
+    });
+
+    return res.json(training);
+  },
+
   async store(req, res) {
     function genetateToken(params = {}) {
       return jwt.sign(params, authConfig.secret, {
@@ -21,7 +36,15 @@ module.exports = {
     }
     const { professorId } = req.params;
 
-    const { description, type, date, time, url } = req.body;
+    const {
+      title,
+      description,
+      presential,
+      online,
+      date,
+      time,
+      url,
+    } = req.body;
 
     const parsedDate = parseISO(date);
 
@@ -41,8 +64,10 @@ module.exports = {
     const training = await Training.create({
       id: uuid(),
       professorId,
+      title,
       description,
-      type,
+      presential,
+      online,
       date: parsedDate,
       time,
       url,

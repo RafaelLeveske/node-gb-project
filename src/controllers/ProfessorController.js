@@ -7,6 +7,12 @@ const authConfig = require('../config/auth');
 
 module.exports = {
   async index(req, res) {
+    const professors = await Professor.findAll();
+
+    return res.json(professors);
+  },
+
+  async show(req, res) {
     const { userId } = req.params;
 
     const user = await User.findByPk(userId, {

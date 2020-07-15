@@ -4,8 +4,10 @@ class Training extends Model {
   static init(connection) {
     super.init(
       {
+        title: DataTypes.STRING,
         description: DataTypes.STRING,
-        type: DataTypes.STRING,
+        presential: DataTypes.BOOLEAN,
+        online: DataTypes.BOOLEAN,
         date: DataTypes.DATEONLY,
         time: DataTypes.TIME,
         url: DataTypes.STRING,
@@ -21,6 +23,11 @@ class Training extends Model {
     this.belongsTo(models.Professor, {
       foreignKey: 'professorId',
       as: 'professors',
+    });
+    this.belongsToMany(models.Student, {
+      foreignKey: 'trainingId',
+      through: 'StudentsTraining',
+      as: 'students',
     });
   }
 }
