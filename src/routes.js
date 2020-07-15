@@ -17,32 +17,31 @@ const routes = express.Router();
 const upload = multer(uploadConfig);
 
 routes.get('/users', authMiddleware, UserController.index);
-
+routes.get('/users/:userId', authMiddleware, UserController.show);
 routes.post('/users', upload.single('avatar'), UserController.store);
-
 routes.post('/users/sessions', UserSessionController.store);
 
-routes.post('/professors/sessions', ProfessorSessionController.store);
-
-routes.post('/students/sessions', StudentSessionController.store);
-
+routes.get('/professors', authMiddleware, ProfessorController.index);
 routes.get(
   '/users/:userId/professors',
   authMiddleware,
-  ProfessorController.index,
+  ProfessorController.show,
 );
 routes.post(
   '/users/:userId/professors',
-  authMiddleware,
   upload.single('avatar'),
+  authMiddleware,
   ProfessorController.store,
 );
+routes.post('/professors/sessions', ProfessorSessionController.store);
 
 routes.get('/students', authMiddleware, StudentController.index);
-
+routes.get('/students/:studentId', authMiddleware, StudentController.show);
 routes.post('/students', upload.single('avatar'), StudentController.store);
+routes.post('/students/sessions', StudentSessionController.store);
 
 routes.get('/trainings', authMiddleware, TrainingController.index);
+routes.get('/trainings/:trainingId', authMiddleware, TrainingController.show);
 routes.post(
   '/professors/:professorId/trainings',
   authMiddleware,
@@ -50,7 +49,7 @@ routes.post(
 );
 
 routes.post(
-  '/trainings/:trainingId/presence',
+  '/trainings/:studentId/presence',
   authMiddleware,
   TrainingPresenceController.store,
 );

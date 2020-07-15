@@ -10,11 +10,12 @@ const connection = new Sequelize(dbConfig);
 
 User.init(connection);
 Professor.init(connection);
-Student.init(connection);
 Training.init(connection);
+Student.init(connection);
 
 User.associate(connection.models);
 Professor.associate(connection.models);
 Training.associate(connection.models);
+Student.associate(connection.models);
 
 module.exports = connection;

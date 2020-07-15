@@ -17,13 +17,21 @@ module.exports = {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
       },
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       description: {
         type: Sequelize.STRING(1234),
         allowNull: false,
       },
-      type: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      presential: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+      },
+      online: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
       },
       date: {
         type: Sequelize.DATEONLY,

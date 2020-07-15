@@ -12,6 +12,13 @@ module.exports = {
 
     return res.json(users);
   },
+  async show(req, res) {
+    const { userId } = req.params;
+
+    const user = await User.findByPk(userId);
+
+    return res.json(user);
+  },
 
   async store(req, res) {
     function genetateToken(params = {}) {

@@ -11,6 +11,22 @@ module.exports = {
     return res.json(students);
   },
 
+  async show(req, res) {
+    const { studentId } = req.params;
+
+    const student = await Student.findByPk(studentId, {
+      include: {
+        association: 'trainings',
+        attributes: ['title'],
+        through: {
+          attributes: [],
+        },
+      },
+    });
+
+    return res.json(student);
+  },
+
   async store(req, res) {
     function genetateToken(params = {}) {
       return jwt.sign(params, authConfig.secret, {
@@ -33,6 +49,7 @@ module.exports = {
       email,
       password: hashedPassword,
       graduation,
+      presence: 0,
     };
 
     await Student.create(student);
