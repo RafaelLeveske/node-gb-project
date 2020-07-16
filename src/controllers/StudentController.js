@@ -33,32 +33,82 @@ module.exports = {
         expiresIn: '1d',
       });
     }
-    const { name, email, password, graduation } = req.body;
+    try {
+      const { name, email, password, graduation } = req.body;
 
-    const checkStudentExists = await Student.findOne({ where: { email } });
-    if (checkStudentExists) {
-      return res.json({ error: 'E-mail address already used' }, 401);
+      const checkStudentExists = await Student.findOne({ where: { email } });
+      if (checkStudentExists) {
+        return res.json({ error: 'E-mail address already used' }, 401);
+      }
+
+      const hashedPassword = await hash(password, 8);
+
+      const student = {
+        id: uuid(),
+        avatar: req.file.filename,
+        name,
+        email,
+        password: hashedPassword,
+        graduation,
+      };
+
+      await Student.create(student);
+
+      delete student.password;
+
+      return res.send({
+        student,
+        token: genetateToken({ id: student.id }),
+      });
+    } catch (err) {
+      return res.status(500).json({ error: 'Student can not be created' });
     }
+  },
 
-    const hashedPassword = await hash(password, 8);
+  async update(req, res) {
+    try {
+      const { studentId } = req.params;
+      const { name, email, password, graduation } = req.body;
 
-    const student = {
-      id: uuid(),
-      avatar: req.file.filename,
-      name,
-      email,
-      password: hashedPassword,
-      graduation,
-      presence: 0,
-    };
+      const hashedPassword = await hash(password, 8);
 
-    await Student.create(student);
+      const student = {
+        avatar: req.file.filename,
+        name,
+        email,
+        password: hashedPassword,
+        graduation,
+      };
 
-    delete student.password;
+      await Student.update(student, {
+        where: { id: studentId },
+      });
 
-    return res.send({
-      student,
-      token: genetateToken({ id: student.id }),
-    });
+      delete studentId.password;
+
+      return res.status(200).json(student);
+    } catch (err) {
+      return res.status(500).json({ error: 'Student can not be updated' });
+    }
+  },
+
+  async destroy(req, res) {
+    try {
+      const { studentId } = req.params;
+
+      const student = await Student.findByPk(studentId);
+
+      if (!student) {
+        return res.status(400).json({ error: 'Student not found' });
+      }
+
+      await student.destroy();
+
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).json({
+        error: 'Student can not be excluded',
+      });
+    }
   },
 };

@@ -14,7 +14,7 @@ module.exports = {
           model: 'Professors',
           key: 'id',
         },
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
       title: {

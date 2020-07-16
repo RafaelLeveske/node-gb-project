@@ -15,8 +15,8 @@ module.exports = {
           model: 'Students',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
       trainingId: {
         type: Sequelize.DataTypes.UUID,
@@ -25,8 +25,8 @@ module.exports = {
           model: 'Trainings',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
       createdAt: {
         type: Sequelize.DATE,

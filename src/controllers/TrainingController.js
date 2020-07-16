@@ -34,49 +34,108 @@ module.exports = {
         expiresIn: '1d',
       });
     }
-    const { professorId } = req.params;
+    try {
+      const { professorId } = req.params;
 
-    const {
-      title,
-      description,
-      presential,
-      online,
-      date,
-      time,
-      url,
-    } = req.body;
+      const {
+        title,
+        description,
+        presential,
+        online,
+        date,
+        time,
+        url,
+      } = req.body;
 
-    const parsedDate = parseISO(date);
+      const parsedDate = parseISO(date);
 
-    const checkTrainingExists = await Training.findOne({
-      where: { date, time },
-    });
-    if (checkTrainingExists) {
-      return res.json({ error: 'Training is already booked' }, 401);
+      const checkTrainingExists = await Training.findOne({
+        where: { date, time },
+      });
+      if (checkTrainingExists) {
+        return res.json({ error: 'Training is already booked' }, 401);
+      }
+
+      const professor = await Professor.findByPk(professorId);
+
+      if (!professor) {
+        return res.status(400).json({ error: 'Professor not Found' });
+      }
+
+      const training = await Training.create({
+        id: uuid(),
+        professorId,
+        title,
+        description,
+        presential,
+        online,
+        date: parsedDate,
+        time,
+        url,
+        presence: 0,
+      });
+
+      return res.send({
+        training,
+        token: genetateToken({ id: training.id }),
+      });
+    } catch (err) {
+      return res.status(500).json({ error: 'Training can not be created' });
     }
+  },
 
-    const professor = await Professor.findByPk(professorId);
+  async update(req, res) {
+    try {
+      const { trainingId } = req.params;
+      const {
+        title,
+        description,
+        presential,
+        online,
+        date,
+        time,
+        url,
+      } = req.body;
 
-    if (!professor) {
-      return res.status(400).json({ error: 'User not Found' });
+      const parsedDate = parseISO(date);
+
+      const training = {
+        title,
+        description,
+        presential,
+        online,
+        date: parsedDate,
+        time,
+        url,
+      };
+
+      await Training.update(training, {
+        where: { id: trainingId },
+      });
+
+      return res.status(200).json(training);
+    } catch (err) {
+      return res.status(500).json({ error: 'Training can not be updated' });
     }
+  },
 
-    const training = await Training.create({
-      id: uuid(),
-      professorId,
-      title,
-      description,
-      presential,
-      online,
-      date: parsedDate,
-      time,
-      url,
-      presence: 0,
-    });
+  async destroy(req, res) {
+    try {
+      const { trainingId } = req.params;
 
-    return res.send({
-      training,
-      token: genetateToken({ id: training.id }),
-    });
+      const training = await Training.findByPk(trainingId);
+
+      if (!training) {
+        return res.status(400).json({ error: 'Training not found' });
+      }
+
+      await training.destroy();
+
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).json({
+        error: 'Training can not be excluded',
+      });
+    }
   },
 };
