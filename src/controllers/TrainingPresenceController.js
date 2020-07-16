@@ -3,48 +3,54 @@ const Training = require('../models/Training');
 
 module.exports = {
   async store(req, res) {
-    const { studentId } = req.params;
-    const { trainingId } = req.body;
+    try {
+      const { studentId } = req.params;
+      const { trainingId, presential, online } = req.body;
 
-    const student = await Student.findByPk(studentId, {
-      include: {
-        association: 'trainings',
-        attributes: ['id', 'title'],
-        through: {
-          attributes: [],
+      const student = await Student.findByPk(studentId, {
+        include: {
+          association: 'trainings',
+          attributes: ['id', 'title'],
+          through: {
+            attributes: [],
+          },
         },
-      },
-    });
-    const training = await Training.findByPk(trainingId, {
-      include: {
-        association: 'students',
-        attributes: ['id', 'avatar', 'name'],
-        through: {
-          attributes: [],
+      });
+      const training = await Training.findByPk(trainingId, {
+        include: {
+          association: 'students',
+          attributes: ['id', 'avatar', 'name'],
+          through: {
+            attributes: [],
+          },
         },
-      },
-    });
+      });
 
-    const { presence, presential } = training;
-
-    if (presential === true) {
-      if (presence === 5) {
+      if (training.online === false && online === true) {
         return res
           .status(401)
-          .json({ error: 'Sorry training has reached its presentials limits' });
+          .json({ error: 'This training its only presential' });
       }
+
+      if (training.presence < training.limit && presential === true) {
+        await training.increment('presence');
+      }
+
+      if (training.presence >= training.limit && presential === true) {
+        await res
+          .status(401)
+          .json({ message: 'Training has reached its presentials limits' });
+      }
+
+      if (!student) {
+        return res.status(400).json({ error: 'Student not Found' });
+      }
+
+      await student.addTraining(training);
+
+      return res.json(training);
+    } catch (err) {
+      return res.status(500).json({ error: 'Presence can not be confirmed' });
     }
-
-    if (!student) {
-      return res.status(400).json({ error: 'Student not Found' });
-    }
-
-    await student.addTraining(training);
-
-    if (student.hasTraining(training)) {
-      await training.increment('presence');
-    }
-
-    return res.json(training);
   },
 };

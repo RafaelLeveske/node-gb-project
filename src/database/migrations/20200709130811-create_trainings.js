@@ -50,6 +50,10 @@ module.exports = {
         allowNull: true,
         autoIncrement: true,
       },
+      limit: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
