@@ -1,9 +1,7 @@
 const { parseISO } = require('date-fns');
 const { uuid } = require('uuidv4');
-const jwt = require('jsonwebtoken');
 const Training = require('../models/Training');
 const Professor = require('../models/Professor');
-const authConfig = require('../config/auth');
 
 module.exports = {
   async index(req, res) {
@@ -29,11 +27,6 @@ module.exports = {
   },
 
   async store(req, res) {
-    function genetateToken(params = {}) {
-      return jwt.sign(params, authConfig.secret, {
-        expiresIn: '1d',
-      });
-    }
     try {
       const { professorId } = req.params;
 
@@ -41,6 +34,7 @@ module.exports = {
         title,
         description,
         presential,
+        limit,
         online,
         date,
         time,
@@ -68,6 +62,7 @@ module.exports = {
         title,
         description,
         presential,
+        limit,
         online,
         date: parsedDate,
         time,
@@ -77,7 +72,6 @@ module.exports = {
 
       return res.send({
         training,
-        token: genetateToken({ id: training.id }),
       });
     } catch (err) {
       return res.status(500).json({ error: 'Training can not be created' });

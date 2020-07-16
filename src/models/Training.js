@@ -12,6 +12,7 @@ class Training extends Model {
         time: DataTypes.TIME,
         url: DataTypes.STRING,
         presence: DataTypes.INTEGER,
+        limit: DataTypes.INTEGER,
       },
       {
         sequelize: connection,
