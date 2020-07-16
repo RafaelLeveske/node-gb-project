@@ -19,37 +19,47 @@ const upload = multer(uploadConfig);
 routes.get('/users', authMiddleware, UserController.index);
 routes.get('/users/:userId', authMiddleware, UserController.show);
 routes.post('/users', upload.single('avatar'), UserController.store);
-routes.post('/users/sessions', UserSessionController.store);
+routes.put('/user/:userId', upload.single('avatar'), UserController.update);
+routes.post('/users_sessions', UserSessionController.store);
 
 routes.get('/professors', authMiddleware, ProfessorController.index);
-routes.get(
-  '/users/:userId/professors',
-  authMiddleware,
-  ProfessorController.show,
-);
+routes.get('/professors/:userId', authMiddleware, ProfessorController.show);
 routes.post(
-  '/users/:userId/professors',
+  '/professors/:userId',
   upload.single('avatar'),
   authMiddleware,
   ProfessorController.store,
 );
-routes.post('/professors/sessions', ProfessorSessionController.store);
+routes.put(
+  '/professors/:professorId',
+  upload.single('avatar'),
+  ProfessorController.update,
+);
+routes.delete('/professors/:professorId', ProfessorController.destroy);
+routes.post('/professors_sessions', ProfessorSessionController.store);
 
 routes.get('/students', authMiddleware, StudentController.index);
 routes.get('/students/:studentId', authMiddleware, StudentController.show);
-routes.post('/students', upload.single('avatar'), StudentController.store);
-routes.post('/students/sessions', StudentSessionController.store);
+routes.post('/register', upload.single('avatar'), StudentController.store);
+routes.put(
+  '/students/:studentId',
+  upload.single('avatar'),
+  StudentController.update,
+);
+routes.delete('/students/:studentId', StudentController.destroy);
+routes.post('/students_sessions', StudentSessionController.store);
 
 routes.get('/trainings', authMiddleware, TrainingController.index);
 routes.get('/trainings/:trainingId', authMiddleware, TrainingController.show);
 routes.post(
-  '/professors/:professorId/trainings',
+  '/trainings/:professorId',
   authMiddleware,
   TrainingController.store,
 );
-
+routes.put('/trainings/:trainingId', TrainingController.update);
+routes.delete('/trainings/:trainingId', TrainingController.destroy);
 routes.post(
-  '/trainings/:studentId/presence',
+  '/presence/:studentId',
   authMiddleware,
   TrainingPresenceController.store,
 );

@@ -28,40 +28,91 @@ module.exports = {
         expiresIn: '1d',
       });
     }
-    const { userId } = req.params;
+    try {
+      const { userId } = req.params;
 
-    const { name, email, password, graduation } = req.body;
+      const { name, email, password, graduation } = req.body;
 
-    const checkUserExists = await Professor.findOne({ where: { email } });
-    if (checkUserExists) {
-      return res.json({ error: 'E-mail address already used' }, 401);
+      const checkUserExists = await Professor.findOne({ where: { email } });
+      if (checkUserExists) {
+        return res.json({ error: 'E-mail address already used' }, 401);
+      }
+
+      const user = await User.findByPk(userId);
+
+      if (!user) {
+        return res.status(400).json({ error: 'User not Found' });
+      }
+
+      const hashedPassword = await hash(password, 8);
+
+      const professor = {
+        id: uuid(),
+        userId,
+        avatar: req.file.filename,
+        name,
+        email,
+        password: hashedPassword,
+        graduation,
+      };
+
+      await Professor.create(professor);
+
+      delete professor.password;
+
+      return res.send({
+        professor,
+        token: genetateToken({ id: professor.id }),
+      });
+    } catch (err) {
+      return res.status(500).json({ error: 'Professor can not be created' });
     }
+  },
 
-    const user = await User.findByPk(userId);
+  async update(req, res) {
+    try {
+      const { professorId } = req.params;
+      const { name, email, password, graduation } = req.body;
 
-    if (!user) {
-      return res.status(400).json({ error: 'User not Found' });
+      const hashedPassword = await hash(password, 8);
+
+      const professor = {
+        avatar: req.file.filename,
+        name,
+        email,
+        password: hashedPassword,
+        graduation,
+      };
+
+      await Professor.update(professor, {
+        where: { id: professorId },
+      });
+
+      delete professor.password;
+
+      return res.status(200).json(professor);
+    } catch (err) {
+      return res.status(500).json({ error: 'Professor can not be updated' });
     }
+  },
 
-    const hashedPassword = await hash(password, 8);
+  async destroy(req, res) {
+    try {
+      const { professorId } = req.params;
 
-    const professor = {
-      id: uuid(),
-      userId,
-      avatar: req.file.filename,
-      name,
-      email,
-      password: hashedPassword,
-      graduation,
-    };
+      const professor = await Professor.findByPk(professorId);
 
-    await Professor.create(professor);
+      if (!professor) {
+        return res.status(400).json({ error: 'Professor not found' });
+      }
 
-    delete professor.password;
+      await professor.destroy();
 
-    return res.send({
-      professor,
-      token: genetateToken({ id: professor.id }),
-    });
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).json({
+        error: 'Professor can not be excluded',
+      });
+    }
   },
 };

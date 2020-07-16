@@ -26,30 +26,59 @@ module.exports = {
         expiresIn: '1d',
       });
     }
-    const { name, email, password } = req.body;
+    try {
+      const { name, email, password } = req.body;
 
-    const checkUserExists = await User.findOne({ where: { email } });
-    if (checkUserExists) {
-      return res.json({ error: 'E-mail address already used' }, 401);
+      const checkUserExists = await User.findOne({ where: { email } });
+      if (checkUserExists) {
+        return res.json({ error: 'E-mail address already used' }, 401);
+      }
+
+      const hashedPassword = await hash(password, 8);
+
+      const user = {
+        id: uuid(),
+        avatar: req.file.filename,
+        name,
+        email,
+        password: hashedPassword,
+      };
+
+      await User.create(user);
+
+      delete user.password;
+
+      return res.send({
+        user,
+        token: genetateToken({ id: user.id }),
+      });
+    } catch (err) {
+      return res.status(400).json({ error: 'User can not be created' });
     }
+  },
+  async update(req, res) {
+    try {
+      const { userId } = req.params;
+      const { name, email, password } = req.body;
 
-    const hashedPassword = await hash(password, 8);
+      const hashedPassword = await hash(password, 8);
 
-    const user = {
-      id: uuid(),
-      avatar: req.file.filename,
-      name,
-      email,
-      password: hashedPassword,
-    };
+      const user = {
+        avatar: req.file.filename,
+        name,
+        email,
+        password: hashedPassword,
+      };
 
-    await User.create(user);
+      await User.update(user, {
+        where: { id: userId },
+      });
 
-    delete user.password;
+      delete user.password;
 
-    return res.send({
-      user,
-      token: genetateToken({ id: user.id }),
-    });
+      return res.status(200).json(user);
+    } catch (err) {
+      return res.status(500).json({ error: 'User can not be updated' });
+    }
   },
 };
