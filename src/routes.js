@@ -40,7 +40,11 @@ routes.post('/professors_sessions', ProfessorSessionController.store);
 
 routes.get('/students', authMiddleware, StudentController.index);
 routes.get('/students/:studentId', authMiddleware, StudentController.show);
-routes.post('/register', upload.single('avatar'), StudentController.store);
+routes.post(
+  '/students/:userId',
+  upload.single('avatar'),
+  StudentController.store,
+);
 routes.put(
   '/students/:studentId',
   upload.single('avatar'),

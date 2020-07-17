@@ -1,6 +1,7 @@
 const { uuid } = require('uuidv4');
 const { hash } = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 const Student = require('../models/Student');
 const authConfig = require('../config/auth');
 
@@ -34,6 +35,8 @@ module.exports = {
       });
     }
     try {
+      const { userId } = req.params;
+
       const { name, email, password, graduation } = req.body;
 
       const checkStudentExists = await Student.findOne({ where: { email } });
@@ -41,10 +44,16 @@ module.exports = {
         return res.json({ error: 'E-mail address already used' }, 401);
       }
 
+      const user = await User.findByPk(userId);
+
+      if (!user) {
+        return res.status(400).json({ error: 'User not Found' });
+      }
       const hashedPassword = await hash(password, 8);
 
       const student = {
         id: uuid(),
+        userId,
         avatar: req.file.filename,
         name,
         email,
