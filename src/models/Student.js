@@ -9,6 +9,7 @@ class Student extends Model {
         email: DataTypes.STRING,
         password: DataTypes.STRING,
         graduation: DataTypes.STRING,
+        block: DataTypes.BOOLEAN,
       },
       {
         sequelize: connection,

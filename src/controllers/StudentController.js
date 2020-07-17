@@ -37,7 +37,7 @@ module.exports = {
     try {
       const { userId } = req.params;
 
-      const { name, email, password, graduation } = req.body;
+      const { name, email, password, graduation, block } = req.body;
 
       const checkStudentExists = await Student.findOne({ where: { email } });
       if (checkStudentExists) {
@@ -59,6 +59,7 @@ module.exports = {
         email,
         password: hashedPassword,
         graduation,
+        block,
       };
 
       await Student.create(student);
@@ -77,7 +78,7 @@ module.exports = {
   async update(req, res) {
     try {
       const { studentId } = req.params;
-      const { name, email, password, graduation } = req.body;
+      const { name, email, password, graduation, block } = req.body;
 
       const hashedPassword = await hash(password, 8);
 
@@ -87,6 +88,7 @@ module.exports = {
         email,
         password: hashedPassword,
         graduation,
+        block,
       };
 
       await Student.update(student, {
