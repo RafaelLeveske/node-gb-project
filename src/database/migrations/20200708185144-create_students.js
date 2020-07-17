@@ -7,6 +7,16 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      userId: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      },
       avatar: {
         type: Sequelize.STRING,
         allowNull: true,

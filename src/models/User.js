@@ -20,6 +20,11 @@ class User extends Model {
       foreignKey: 'userId',
       as: 'professors',
     });
+
+    this.hasMany(models.Student, {
+      foreignKey: 'userId',
+      as: 'students',
+    });
   }
 }
 module.exports = User;
