@@ -39,6 +39,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      block: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
       graduation: {
         type: Sequelize.STRING,
         allowNull: false,
