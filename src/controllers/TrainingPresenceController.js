@@ -26,6 +26,12 @@ module.exports = {
         },
       });
 
+      if (student.block === true) {
+        return res.status(401).json({
+          error: 'Access restrict',
+        });
+      }
+
       if (training.online === false && online === true) {
         return res
           .status(401)
